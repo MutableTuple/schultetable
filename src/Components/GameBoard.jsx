@@ -61,7 +61,6 @@ const GameBoard = ({
     const synth = new Tone.Synth().toDestination();
     synth.triggerAttackRelease("A3", "22n"); // Play a sound on every button click
     const clickedNumber = clickedNumbers.find((n) => n.number === number);
-
     if (clickedNumber) {
       if (clickedNumber.correct) {
         const synthCorrect = new Tone.Synth().toDestination();

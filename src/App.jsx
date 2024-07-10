@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import "./App.css";
 import "tailwindcss/tailwind.css";
 import Confetti from "react-confetti";
@@ -9,6 +10,8 @@ import Modal from "./Components/Modal";
 import Logo from "./Components/Logo";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
+import Blog from "./Components/Blog"; // Import Blog component
+import BlogPost from "./Components/BlogPost";
 
 const generateRandomColor = () => {
   const letters = "0123456789ABCDEF";
@@ -21,7 +24,7 @@ const generateRandomColor = () => {
 
 const App = () => {
   const [numbers, setNumbers] = useState([]);
-  const [gridSize, setGridSize] = useState(3);
+  const [gridSize, setGridSize] = useState(5);
   const [startTime, setStartTime] = useState(null);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [wrongClicks, setWrongClicks] = useState(0);
@@ -30,12 +33,11 @@ const App = () => {
   const [showConfetti, setShowConfetti] = useState(false);
   const [pastGames, setPastGames] = useState([]);
   const [difficulty, setDifficulty] = useState("easy");
-  const [colorMode, setColorMode] = useState("mono"); // Start with mono color mode
+  const [colorMode, setColorMode] = useState("mono");
   const [buttonColors, setButtonColors] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    // Load past games from localStorage on initial mount
     const storedGames = JSON.parse(localStorage.getItem("pastGames")) || [];
     setPastGames(storedGames);
   }, []);
@@ -70,10 +72,8 @@ const App = () => {
         difficulty,
       };
 
-      // Retrieve existing games from localStorage
       const storedGames = JSON.parse(localStorage.getItem("pastGames")) || [];
 
-      // Check if the new game already exists in stored games to avoid duplicates
       const gameExists = storedGames.some(
         (game) =>
           game.elapsedTime === newGame.elapsedTime &&
@@ -82,7 +82,6 @@ const App = () => {
           game.difficulty === newGame.difficulty
       );
 
-      // If the game doesn't exist, add it to the stored games
       if (!gameExists) {
         storedGames.push(newGame);
         localStorage.setItem("pastGames", JSON.stringify(storedGames));
@@ -109,17 +108,17 @@ const App = () => {
         break;
       case "hard":
         while (nums.size < size * size) {
-          nums.add(Math.floor(Math.random() * 90) + 10); // Two-digit numbers
+          nums.add(Math.floor(Math.random() * 90) + 10);
         }
         break;
       case "extreme":
         while (nums.size < size * size) {
-          nums.add(Math.floor(Math.random() * 900) + 100); // Three-digit numbers
+          nums.add(Math.floor(Math.random() * 900) + 100);
         }
         break;
       case "impossible":
         while (nums.size < size * size) {
-          nums.add(Math.floor(Math.random() * 999999) + 1); // Random four to six-digit numbers
+          nums.add(Math.floor(Math.random() * 999999) + 1);
         }
         break;
       default:
@@ -212,46 +211,57 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-yellow-100 md:px-24 px-8 md:py-12 py-8">
-      {showConfetti && <Confetti />}
-      <Header />
-      <div className="md:flex ">
-        <GameBoard
-          numbers={numbers}
-          clickedNumbers={clickedNumbers}
-          handleClick={handleClick}
-          colorMode={colorMode}
-          buttonColors={buttonColors}
-          gridSize={gridSize}
-          gameOver={gameOver}
-          elapsedTime={elapsedTime}
-          wrongClicks={wrongClicks}
-          resetGame={resetGame}
-          className="w-full md:w-3/4"
-        />
-        <Stats
-          elapsedTime={elapsedTime}
-          wrongClicks={wrongClicks}
-          gridSize={gridSize}
-          handleGridSizeChange={handleGridSizeChange}
-          difficulty={difficulty}
-          handleDifficultyChange={handleDifficultyChange}
-          colorMode={colorMode}
-          setColorMode={setColorMode}
-          shuffleNumbers={shuffleNumbers}
-          toggleModal={toggleModal}
-          gameOver={gameOver}
-          startTime={startTime} // Pass startTime to Stats
-          className="w-full md:w-1/4"
-        />
+    <Router>
+      <div className="min-h-screen bg-yellow-100 md:px-24 px-8 md:py-12 py-8">
+        {showConfetti && <Confetti />}
+        <Header />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <div className="md:flex ">
+                <GameBoard
+                  numbers={numbers}
+                  clickedNumbers={clickedNumbers}
+                  handleClick={handleClick}
+                  colorMode={colorMode}
+                  buttonColors={buttonColors}
+                  gridSize={gridSize}
+                  gameOver={gameOver}
+                  elapsedTime={elapsedTime}
+                  wrongClicks={wrongClicks}
+                  resetGame={resetGame}
+                  className="w-full md:w-3/4"
+                />
+                <Stats
+                  elapsedTime={elapsedTime}
+                  wrongClicks={wrongClicks}
+                  gridSize={gridSize}
+                  handleGridSizeChange={handleGridSizeChange}
+                  difficulty={difficulty}
+                  handleDifficultyChange={handleDifficultyChange}
+                  colorMode={colorMode}
+                  setColorMode={setColorMode}
+                  shuffleNumbers={shuffleNumbers}
+                  toggleModal={toggleModal}
+                  gameOver={gameOver}
+                  startTime={startTime}
+                  className="w-full md:w-1/4"
+                />
+              </div>
+            }
+          />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:id" element={<BlogPost />} />
+        </Routes>
+        {modalOpen && (
+          <Modal closeModal={toggleModal}>
+            <PastGames pastGames={pastGames} />
+          </Modal>
+        )}
+        <Footer />
       </div>
-      {modalOpen && (
-        <Modal closeModal={toggleModal}>
-          <PastGames pastGames={pastGames} />
-        </Modal>
-      )}
-      <Footer />
-    </div>
+    </Router>
   );
 };
 
