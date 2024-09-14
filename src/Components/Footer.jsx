@@ -3,6 +3,7 @@ import { FaLinkedinIn } from "react-icons/fa";
 import { FaSquareXTwitter } from "react-icons/fa6";
 import { IoLogoYoutube } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
+import Notification from "./Notification";
 
 const Footer = () => {
   const navigate = useNavigate();
@@ -19,18 +20,6 @@ const Footer = () => {
           </button>
         </div>
         <div className="flex gap-2 items-center justify-between md:justify-end">
-          <a
-            href="https://www.producthunt.com/posts/schulte-table?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-schulte&#0045;table"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=469788&theme=dark"
-              alt="Schulte&#0032;Table - Train&#0032;your&#0032;brain | Product Hunt"
-              width="250"
-              height="54"
-            />
-          </a>
           <div className="flex gap-4">
             <a
               href="https://www.linkedin.com/in/yogesh-vishwakarma-bb132721a/"

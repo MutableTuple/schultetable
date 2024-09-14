@@ -1,5 +1,6 @@
 import React from "react";
 import Logo from "./Logo";
+import Notification from "./Notification";
 const Header = () => {
   return (
     <header className="py-4 md:px-6 w-ful items-center">
@@ -7,6 +8,7 @@ const Header = () => {
         <Logo />
       </div>
       <div className="w-full bg-yellow-400/60 h-0.5 mt-4"></div>
+      <Notification />
     </header>
   );
 };
